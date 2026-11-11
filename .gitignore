@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js build output
+.next/
+out/
+build/
+dist/
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+*.tsbuildinfo
+.vercel
+
+# env
+.env
+.env.*
+!.env.example
+
+# scraped reference material (not part of the shipped clone)
+reference/

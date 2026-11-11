@@ -1,0 +1,207 @@
+/* ==========================================================================
+   Metaversal Solutions — design tokens
+   Extracted from the production stylesheet (reference/css/3invhwi746hi1.css).
+   Import once in the root layout, before globals.css.
+   ========================================================================== */
+
+:root {
+  /* ---- Core palette ---------------------------------------------------- */
+  --c-space: #0c0704;        /* deepest background */
+  --c-ink: #0d0805;          /* panel / overlay background */
+  --c-brown-900: #2b1a0d;    /* ink on light sections */
+  --c-amber: #f7a224;        /* primary accent / signal */
+  --c-gold: #e0a864;         /* secondary accent / hairlines */
+  --c-cream: #fbf0c2;        /* primary text on dark */
+  --c-copper: #c47a1f;
+  --c-muted: #a8692a;
+  --c-live: #7bd88f;
+
+  /* Cream alpha ladder */
+  --c-cream-62: #fbf0c29e;   /* body copy */
+  --c-cream-60: #fbf0c299;   /* footer copy */
+  --c-cream-55: #fbf0c28c;   /* muted */
+  --c-cream-12: #fbf0c21f;   /* hairline */
+  --c-cream-14: #fbf0c224;   /* hairline (stronger) */
+
+  /* ---- Layout ---------------------------------------------------------- */
+  --header-h: 58px;
+  --container-wide: min(1280px, 100% - 80px);
+  --container: min(1180px, 100% - 80px);
+  --container-narrow: min(720px, 100% - 40px);
+
+  /* ---- Typography ------------------------------------------------------ */
+  --font-display: 'Anton', Impact, sans-serif;
+  --font-jakarta: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
+  --font-poppins: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, sans-serif;
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Motion ---------------------------------------------------------- */
+  --jx-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --menu-ease: cubic-bezier(0.7, 0, 0.2, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-reveal: 1.2s;
+  --dur-wordmark: 1.4s;
+
+  /* ---- Scroll acts ----------------------------------------------------- */
+  --universe-scroll: 2800vh;
+  --word-cycle: 7s;
+
+  /* ---- Shared "jx" sub-theme (dark default) ---------------------------- */
+  --jx-acid: #f7a224;
+  --jx-ink: #0d0805;
+  --jx-white: #fbf0c2;
+  --jx-grey: #fbf0c28c;
+  --jx-dim: #3a2a1c;
+}
+
+/* Light variant of the shared chrome (reel cards, inverted panels). */
+[data-theme='light'] {
+  --jx-acid: #c47a1f;
+  --jx-ink: #fff;
+  --jx-white: #2b1a0d;
+  --jx-grey: #4a2f1899;
+  --jx-dim: #eadfce;
+}
+
+/* ==========================================================================
+   Section scopes — declare these on each page/section wrapper.
+   ========================================================================== */
+
+.sv-page {
+  --sv-cream: #fbf0c2;
+  --sv-soft: #fbf0c29e;
+  --sv-line: #fbf0c21f;
+  --sv-amber: #f7a224;
+  --sv-gold: #e0a864;
+}
+
+.ab-page {
+  --ab-cream: #fbf0c2;
+  --ab-soft: #fbf0c29e;
+  --ab-line: #fbf0c21f;
+  --ab-amber: #f7a224;
+  --ab-gold: #e0a864;
+}
+
+.pj-page {
+  --pj-cream: #fbf0c2;
+  --pj-soft: #fbf0c29e;
+  --pj-line: #fbf0c224;
+  --pj-amber: #f7a224;
+  --pj-gold: #e0a864;
+  --pj-card: #140c06;
+}
+
+.ct-page {
+  --ct-cream: #fbf0c2;
+  --ct-soft: #fbf0c29e;
+  --ct-line: #fbf0c224;
+  --ct-amber: #f7a224;
+}
+
+.fq-section {
+  --fq-cream: #fbf0c2;
+  --fq-soft: #fbf0c29e;
+  --fq-line: #fbf0c21f;
+  --fq-amber: #f7a224;
+  --fq-gold: #e0a864;
+}
+
+.ft {
+  --ft-cream: #fbf0c2;
+  --ft-soft: #fbf0c299;
+  --ft-line: #fbf0c21f;
+  --ft-amber: #f7a224;
+  --ft-gold: #e0a864;
+}
+
+/* The single light act on the home page. */
+.fp-section {
+  --fp-ink: #2b1a0d;
+  --fp-soft: #2b1a0d99;
+  --fp-line: #2b1a0d24;
+  --fp-amber: #f7a224;
+  --fp-copper: #c47a1f;
+}
+
+/* ==========================================================================
+   Minimal base layer
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-space);
+  color: var(--c-cream);
+  font-family: var(--font-jakarta);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--c-amber);
+  color: var(--c-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-amber);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Mono telemetry should never jitter. */
+code,
+kbd,
+samp,
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Pinned/unpinned acts: let the document flow normally. */
+  .universe-section,
+  .hands-section,
+  .abl-section,
+  .mb-section,
+  .fp-section {
+    height: auto !important;
+  }
+
+  .universe-stage,
+  .hands-sticky,
+  .abl-sticky,
+  .fp-sticky {
+    position: relative !important;
+    height: auto !important;
+    top: auto !important;
+  }
+}

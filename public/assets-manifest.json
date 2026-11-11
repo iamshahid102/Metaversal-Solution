@@ -1,0 +1,134 @@
+[
+  {
+    "path": "public/brand/logo-512.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 253680
+  },
+  {
+    "path": "public/brand/logo-mark.svg",
+    "status": 200,
+    "type": "image/svg+xml",
+    "bytes": 76897
+  },
+  {
+    "path": "public/brand/favicon.ico",
+    "status": 200,
+    "type": "image/vnd.microsoft.icon",
+    "bytes": 8956
+  },
+  {
+    "path": "public/brand/icon.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 79531
+  },
+  {
+    "path": "public/brand/apple-icon.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 35640
+  },
+  {
+    "path": "public/images/hands-creation-of-adam.png",
+    "status": 200,
+    "type": "image/png",
+    "bytes": 33735
+  },
+  {
+    "path": "public/images/pages/home.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 126444
+  },
+  {
+    "path": "public/images/pages/services.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 37140
+  },
+  {
+    "path": "public/images/pages/about.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 70846
+  },
+  {
+    "path": "public/images/pages/projects.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 48826
+  },
+  {
+    "path": "public/images/pages/products.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 24274
+  },
+  {
+    "path": "public/projects/thumbs/ai-fraud-detection.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 146470
+  },
+  {
+    "path": "public/projects/thumbs/zurbez.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 98226
+  },
+  {
+    "path": "public/projects/thumbs/nouvelle-spaces.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 152764
+  },
+  {
+    "path": "public/projects/thumbs/safar.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 180016
+  },
+  {
+    "path": "public/projects/ai-fraud-detection.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 91740
+  },
+  {
+    "path": "public/projects/zurbez.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 31558
+  },
+  {
+    "path": "public/projects/nouvelle-spaces.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 371552
+  },
+  {
+    "path": "public/projects/safar.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 79508
+  },
+  {
+    "path": "public/projects/architecture/ai-fraud-detection.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 80988
+  },
+  {
+    "path": "public/projects/architecture/aws-devops-pipeline.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 80176
+  },
+  {
+    "path": "public/projects/architecture/fabric-data-infrastructure.webp",
+    "status": 200,
+    "type": "image/webp",
+    "bytes": 153112
+  }
+]

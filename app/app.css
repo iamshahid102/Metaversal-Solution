@@ -1,0 +1,58 @@
+/* Runtime additions layered on top of the ported production stylesheet.
+   Only holds behaviour classes that the original JS toggled inline. */
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+/* The captured DOM wraps the shell + main in a plain div; keep it out of layout. */
+.page-root {
+  display: contents;
+}
+
+#site-shell {
+  display: contents;
+}
+
+/* Three.js universe canvas replaces the original /universe iframe. */
+#universe-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: transparent;
+}
+
+/* Reveal helper for elements the original animated with GSAP timelines. */
+.reveal-pending {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.reveal-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 1.2s var(--jx-ease), transform 1.2s var(--jx-ease);
+}
+
+/* Menu overlay rows: the captured markup ships --d delays; the original set
+   opacity inline while opening. */
+.sm-overlay li,
+.sm-overlay .sm-contact {
+  transition-delay: var(--d, 0s);
+}
+.sm-overlay.is-open li,
+.sm-overlay.is-open .sm-contact {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-pending {
+    opacity: 1;
+    transform: none;
+  }
+}
