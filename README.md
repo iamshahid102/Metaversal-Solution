@@ -94,11 +94,14 @@ The public routes serve a **mirror of the current production build**, captured f
 |---|---|
 | Pages | `public/mirror/pages/*.html` — home, services, products, about, projects, contact and the six project pages |
 | Next build assets | `public/mirror/_next/**` — the two production stylesheets, JS chunks and woff2 faces |
-| Universe | `public/mirror/universe/index.html` + `public/mirror/_nuxt/**` — the self-contained Nuxt/WebGL app used by the hero iframe |
+| Universe | `public/mirror/universe/index.html` + `public/mirror/_nuxt/**` — the self-contained Nuxt/WebGL app used by the hero iframe: 4 entry chunks, 26 lazy chunks, 6 faces and the `static/` payloads |
+| Universe media | `public/image/**` (13 constellation/principle textures + 5 keyhole frames), `public/audio/sound/**` (14 ambient/UI cues), `public/mirror/_nuxt/img/**` (webpack stills) |
 | Routing | `next.config.ts` rewrites `/`, `/services`, `/projects/<slug>`, … to the mirrored pages and `/universe/index.html` to the Nuxt app |
 | Icons | `/favicon.ico`, `/icon.png`, `/apple-icon.png` at the public root |
 
 Asset URLs inside the mirror are rewritten from `/_next/` and `/_nuxt/` to `/mirror/...` (including the escaped `\/_next\/` forms in Next's inline flight payload), and an early capture-phase click handler forces full-page navigation so the mirrored client never asks this host for RSC payloads it cannot serve.
+
+The universe bundle builds part of its URLs at runtime rather than in markup (`f.p + <chunk>.js`, `/image/<texture>.png`, `/image/frame/<frame>.png`, `/audio/sound/<cue>.mp3`, `staticAssetsBase + "/payload.js"`). Those are mirrored by `scripts/mirror_universe_assets.py`, which reads the webpack chunk map and the principle/sound enums out of the bundle and downloads every referenced file; `next.config.ts` additionally passes `/_next/:path*` and `/_nuxt/:path*` through to `/mirror/…` for URLs constructed in JS.
 
 ```bash
 npm install
@@ -109,6 +112,7 @@ npm start
 # refresh the mirror from the live site
 python scripts/mirror.py
 python scripts/fix_mirror_urls.py
+python scripts/mirror_universe_assets.py   # chunk map, textures, audio
 ```
 
 The earlier hand-built React implementation (`app/**/page.tsx`, `components/SiteRuntime.tsx`) is still in the repository for reference, but the rewrites bypass it. Remove the `beforeFiles` rewrites in `next.config.ts` to use that implementation instead.
@@ -126,9 +130,9 @@ The earlier hand-built React implementation (`app/**/page.tsx`, `components/Site
 
 ## 6. Known limitations / notes
 
-- **Screenshots:** headless Chrome stalls while rendering the scroll-driven WebGL in this environment, so no screenshots were captured and the clone was verified through its served HTML, compiled CSS, route responses and type-safe build rather than pixel screenshots. `reference/screenshots/` is empty.
-- **`/universe/`** is disallowed by `robots.txt` and was intentionally not scraped. The clone mounts its own Three.js scene in the universe stage instead.
-- **WebGL source:** the original 3D scenes are minified in `reference/js/`; the clone rebuilds them from `docs/05-motion-and-3d.md` (planet, three star layers, camera arc, pointer parallax) and falls back to a static background if WebGL is unavailable.
+- **Screenshots:** headless Chrome's `--virtual-time-budget` mode hangs once the WebGL loop is running, so capture is driven over CDP (`puppeteer-core` + the installed Chrome, software WebGL). Hero, sector and capability states were screenshotted locally and against the live site at 1366×900 and compared frame by frame; they match. `reference/screenshots/` is still empty because those captures are throwaway.
+- **`/universe/`** is disallowed by `robots.txt` but is the real hero scene, so it is mirrored verbatim: the iframe loads `/universe/index.html` (rewritten to `public/mirror/universe/index.html`) and runs the production Nuxt/WebGL app, including its textures, lazy chunks and audio.
+- **WebGL source:** the galaxy, constellation drawings, sector cards and scroll choreography are the production bundles, not a reimplementation; `reference/js/` and `docs/05-motion-and-3d.md` document the same scenes for reading.
 - **FAQ channels 02–05** were never present in the captured DOM; the clone supplies answers in the site's voice (see `docs/09-content-copy.md`).
 - **Legal:** all copy, imagery, logo and fonts belong to Metaversal Solutions / their respective licensors (Anton, Poppins, Plus Jakarta Sans, Cormorant Garamond and JetBrains Mono are open-source fonts). This kit is for a clone the requester is authorised to build; do not republish the brand assets as your own.
 - **No analytics, cookies or tracking** were present in the captured pages; the clone does not need a consent banner.

@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
           destination: `/mirror/pages/${name}.html`,
         })),
         { source: "/universe/index.html", destination: "/mirror/universe/index.html" },
+        // Runtime-built asset URLs inside the mirrored bundles (webpack public
+        // path, Nuxt staticAssetsBase, dynamic chunk imports) stay absolute.
+        { source: "/_next/:path*", destination: "/mirror/_next/:path*" },
+        { source: "/_nuxt/:path*", destination: "/mirror/_nuxt/:path*" },
       ],
       afterFiles: [],
       fallback: [],

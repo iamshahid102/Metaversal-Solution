@@ -27,3 +27,8 @@ reference/
 
 # live capture scratch
 .tmp-live/
+.tmp-*
+
+# python caches
+__pycache__/
+*.pyc
