@@ -30,7 +30,10 @@ const nextConfig: NextConfig = {
         { source: "/universe/index.html", destination: "/mirror/universe/index.html" },
         // Runtime-built asset URLs inside the mirrored bundles (webpack public
         // path, Nuxt staticAssetsBase, dynamic chunk imports) stay absolute.
-        { source: "/_next/:path*", destination: "/mirror/_next/:path*" },
+        // Mirrored framework assets are stored under /mirror/next-static
+        // because a public file path containing a `_next` segment makes the
+        // Vercel output finalizer fail with a generic internal error.
+        { source: "/_next/:path*", destination: "/mirror/next-static/:path*" },
         { source: "/_nuxt/:path*", destination: "/mirror/_nuxt/:path*" },
       ],
       afterFiles: [],

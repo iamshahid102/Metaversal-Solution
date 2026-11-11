@@ -6,8 +6,12 @@ build's own HTML, CSS and JS are served from /mirror/* and wired to the public
 routes by next.config.ts.
 
 Rewrites performed:
-  /_next/  -> /mirror/_next/
+  /_next/  -> /mirror/next-static/
   /_nuxt/  -> /mirror/_nuxt/
+
+`/_next/` is a namespace Vercel reserves for the framework, so mirrored
+framework assets are stored under /mirror/next-static/ (a public/ path that
+contains a `_next` segment makes the deployment fail while finalizing outputs).
 and an early click handler forces full-page navigation so the mirrored Next
 router never asks this server for RSC payloads it cannot provide.
 """
@@ -93,14 +97,24 @@ def save(path: str, data: bytes) -> None:
 
 def rewrite(text: str) -> str:
     # inline flight payloads escape slashes, so handle \/_next\/ as well
-    text = text.replace("\\/_next\\/", "\\/mirror\\/_next\\/")
+    text = text.replace("\\/_next\\/", "\\/mirror\\/next-static\\/")
     text = text.replace("\\/_nuxt\\/", "\\/mirror\\/_nuxt\\/")
-    text = text.replace("\\/_next/", "\\/mirror\\/_next/")
+    text = text.replace("\\/_next/", "\\/mirror\\/next-static/")
     text = text.replace("\\/_nuxt/", "\\/mirror\\/_nuxt/")
-    return text.replace("/_next/", "/mirror/_next/").replace("/_nuxt/", "/mirror/_nuxt/")
+    return text.replace("/_next/", "/mirror/next-static/").replace("/_nuxt/", "/mirror/_nuxt/")
 
 
-ABS_RE = re.compile(r"[\"'(](/mirror/(?:_next|_nuxt)/[^\"')?#]+)")
+# Mirrored framework assets live under a non-reserved name (see module docs).
+NEXT_MIRROR = "/mirror/next-static/"
+
+
+def remote_url(path: str) -> str:
+    if path.startswith(NEXT_MIRROR):
+        path = "/_next/" + path[len(NEXT_MIRROR) :]
+    return BASE + path[len("/mirror") :]
+
+
+ABS_RE = re.compile(r"[\"'(](/mirror/(?:next-static|_nuxt)/[^\"')?#]+)")
 REL_RE = re.compile(r"[\"'](\.{1,2}/[^\"')?#]+\.(?:js|mjs|css|woff2?|png|webp|svg|json))[\"']")
 IMPORT_RE = re.compile(r"(?:from|import\s*\(|require\s*\()\s*[\"'](\.{1,2}/[^\"']+)[\"']")
 
@@ -151,7 +165,7 @@ def drain() -> None:
         if path in seen:
             continue
         seen.add(path)
-        url = BASE + path[len("/mirror") :]
+        url = remote_url(path)
         try:
             data = fetch(url)
         except Exception as exc:  # noqa: BLE001
@@ -224,7 +238,7 @@ def main() -> None:
             if f.endswith((".html", ".js", ".css")):
                 p = os.path.join(root, f)
                 text = open(p, encoding="utf-8", errors="replace").read()
-                if re.search(r"[\"'(]/_(?:next|nuxt)/", text):
+                if re.search(r"[\"'(]/_(?:next|nuxt)/|/mirror/_next/", text):
                     leftovers.append(p)
     print(f"unrewritten asset urls in {len(leftovers)} files")
     for p in leftovers[:10]:

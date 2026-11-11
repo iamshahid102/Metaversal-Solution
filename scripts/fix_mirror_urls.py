@@ -25,20 +25,29 @@ def variants(prefix: str) -> list[str]:
     return [esc, mixed, raw]
 
 
+def dest(prefix: str) -> str:
+    """Mirror directory for a live asset prefix.
+
+    `/_next` is reserved by the Vercel output finalizer, so mirrored framework
+    assets are stored under a neutral name instead.
+    """
+    return "next-static" if prefix == "_next" else prefix
+
+
 def normalize(text: str, prefix: str) -> tuple[str, int]:
     changes = 0
-    mirrored = "/mirror/" + prefix + "/"
+    mirrored = "/mirror/" + dest(prefix) + "/"
     for form in variants(prefix):
         token = "\x00" + prefix + "\x00"
         # protect already-mirrored escaped forms
         if form.startswith(BS):
-            already = BS + "/mirror" + BS + "/" + prefix + BS + "/"
+            already = BS + "/mirror" + BS + "/" + dest(prefix) + BS + "/"
             text = text.replace(already, token)
             changes += text.count(form)
-            text = text.replace(form, BS + "/mirror" + BS + "/" + prefix + BS + "/")
+            text = text.replace(form, BS + "/mirror" + BS + "/" + dest(prefix) + BS + "/")
             text = text.replace(token, already)
         else:
-            already = "/mirror/" + prefix + "/"
+            already = "/mirror/" + dest(prefix) + "/"
             text = text.replace(already, token)
             changes += text.count(form)
             text = text.replace(form, already)
@@ -64,7 +73,7 @@ for path in FILES:
     text = open(path, encoding="utf-8", errors="replace").read()
     for m in re.finditer(r"_next", text):
         ctx = text[max(0, m.start() - 10) : m.start() + 10]
-        if "/mirror/_next" not in ctx and "/mirror" + BS + "/_next" not in ctx:
+        if "/mirror/next-static" not in ctx and "/mirror" + BS + "/next-static" not in ctx:
             bad.append((path, repr(ctx)))
             break
 print(f"files with unmirrored _next: {len(bad)}")
@@ -75,4 +84,15 @@ for path in ["public/mirror/pages/home.html", "public/mirror/universe/index.html
     text = open(path, encoding="utf-8", errors="replace").read()
     esc = text.count(BS + "/_next" + BS) + text.count(BS + "/_nuxt" + BS)
     raw = len(re.findall(r"(?<!mirror)/(?:_next|_nuxt)/", text))
-    print(path, "escaped:", esc, "raw:", raw, "bytes:", len(text))
+    mirrored_next = text.count("/mirror/next-static/") + text.count(BS + "/mirror" + BS + "/next-static")
+    print(
+        path,
+        "escaped:",
+        esc,
+        "raw:",
+        raw,
+        "mirrored next-static:",
+        mirrored_next,
+        "bytes:",
+        len(text),
+    )

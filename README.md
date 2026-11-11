@@ -93,7 +93,7 @@ The public routes serve a **mirror of the current production build**, captured f
 | Layer | Location |
 |---|---|
 | Pages | `public/mirror/pages/*.html` — home, services, products, about, projects, contact and the six project pages |
-| Next build assets | `public/mirror/_next/**` — the two production stylesheets, JS chunks and woff2 faces |
+| Next build assets | `public/mirror/next-static/**` — the two production stylesheets, JS chunks and woff2 faces (served at `/_next/*` by a rewrite; the folder cannot be named `_next` because Vercel reserves that namespace during output finalization) |
 | Universe | `public/mirror/universe/index.html` + `public/mirror/_nuxt/**` — the self-contained Nuxt/WebGL app used by the hero iframe: 4 entry chunks, 26 lazy chunks, 6 faces and the `static/` payloads |
 | Universe media | `public/image/**` (13 constellation/principle textures + 5 keyhole frames), `public/audio/sound/**` (14 ambient/UI cues), `public/mirror/_nuxt/img/**` (webpack stills) |
 | Services icons | `public/constellations/**` — the six images the services page digitises into per-sector drawings (sectors 2, 3 and 5–8); sectors 1, 4 and 9 use point sets embedded in the bundle |

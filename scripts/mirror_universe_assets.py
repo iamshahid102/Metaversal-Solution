@@ -51,11 +51,15 @@ def collect() -> tuple[set[str], set[str]]:
 def local_path(url_path: str) -> Path:
     """Map a live URL path to where this app serves it.
 
-    /_nuxt and /_next live under public/mirror (see next.config.ts rewrites);
+    /_nuxt and /_next live under public/mirror/ (see next.config.ts rewrites);
     root media such as /image is served straight from public.
     """
     parts = [p for p in url_path.strip("/").split("/") if p]
     if parts and parts[0] in ("_nuxt", "_next"):
+        # /_next is reserved by the Vercel output finalizer, so its mirror
+        # lives under next-static/ inside public/mirror.
+        if parts[0] == "_next":
+            parts[0] = "next-static"
         return Path("public", "mirror", *parts)
     return Path("public", *parts)
 
