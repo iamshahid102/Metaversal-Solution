@@ -2,7 +2,7 @@
 
 A complete, build-ready reconstruction plan for **https://metaversalsolution.com**, plus every asset the site uses (fonts, logo, page imagery, project imagery), the original markup/CSS/JS for reference, and a verbatim copy deck.
 
-It is now a **runnable Next.js clone**: the captured page markup and the production stylesheet are wired into the app, and the original JavaScript behaviour (menu, scroll acts, FAQ radio, Three.js universe) is re-implemented in a client runtime.
+It now serves the site's **current production build** from inside a Next.js app, so its typography, palette, menu, scroll animations and WebGL universe are the original code rather than a reimplementation.
 
 ---
 
@@ -86,27 +86,32 @@ Every file was fetched from `https://metaversalsolution.com` with a real browser
 
 ---
 
-## 4. Run the clone
+## 4. How the clone is assembled
+
+The public routes serve a **mirror of the current production build**, captured from the live site. Typography, colours, menu, scroll choreography and the WebGL universe are therefore the site's own code.
+
+| Layer | Location |
+|---|---|
+| Pages | `public/mirror/pages/*.html` — home, services, products, about, projects, contact and the six project pages |
+| Next build assets | `public/mirror/_next/**` — the two production stylesheets, JS chunks and woff2 faces |
+| Universe | `public/mirror/universe/index.html` + `public/mirror/_nuxt/**` — the self-contained Nuxt/WebGL app used by the hero iframe |
+| Routing | `next.config.ts` rewrites `/`, `/services`, `/projects/<slug>`, … to the mirrored pages and `/universe/index.html` to the Nuxt app |
+| Icons | `/favicon.ico`, `/icon.png`, `/apple-icon.png` at the public root |
+
+Asset URLs inside the mirror are rewritten from `/_next/` and `/_nuxt/` to `/mirror/...` (including the escaped `\/_next\/` forms in Next's inline flight payload), and an early capture-phase click handler forces full-page navigation so the mirrored client never asks this host for RSC payloads it cannot serve.
 
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-npm run build      # production build (15 static routes)
+npm run build      # production build
 npm start
+
+# refresh the mirror from the live site
+python scripts/mirror.py
+python scripts/fix_mirror_urls.py
 ```
 
-**How it is assembled**
-
-| Layer | Files | Notes |
-|---|---|---|
-| Routes | `app/**/page.tsx` | `/`, `/services`, `/products`, `/about`, `/projects`, `/projects/[slug]`, `/contact` |
-| Markup | `content/pages/*.html` | Captured DOM with scripts stripped, served through `dangerouslySetInnerHTML` so the production class names and structure survive exactly |
-| Styles | `app/legacy.css` | The site's 117 KB production stylesheet, minus the `@font-face` blocks (fonts come from `/fonts/fonts.css`), imported globally |
-| Fonts | `public/fonts/*.woff2` | All 54 subset faces, same families and unicode ranges as the original |
-| Runtime | `components/SiteRuntime.tsx` | Menu overlay, live PKT clock, universe HUD scrub, hands/manifesto/zipper/flight-plan/F​AQ/closing acts, about radar, project filters |
-| 3D | `three` (dynamic import) | Replaces the original `/universe/` iframe with a starfield, planet, atmosphere and rings driven by scroll progress |
-
-The original `/universe/` page was never captured (robots-disallowed), so the Three.js scene is a behavioural rebuild per `docs/05-motion-and-3d.md`; every other act uses the captured DOM and original CSS.
+The earlier hand-built React implementation (`app/**/page.tsx`, `components/SiteRuntime.tsx`) is still in the repository for reference, but the rewrites bypass it. Remove the `beforeFiles` rewrites in `next.config.ts` to use that implementation instead.
 
 ## 5. Reading order
 

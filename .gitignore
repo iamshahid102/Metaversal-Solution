@@ -24,3 +24,6 @@ npm-debug.log*
 
 # scraped reference material (not part of the shipped clone)
 reference/
+
+# live capture scratch
+.tmp-live/
