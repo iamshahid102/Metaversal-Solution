@@ -96,6 +96,7 @@ The public routes serve a **mirror of the current production build**, captured f
 | Next build assets | `public/mirror/_next/**` — the two production stylesheets, JS chunks and woff2 faces |
 | Universe | `public/mirror/universe/index.html` + `public/mirror/_nuxt/**` — the self-contained Nuxt/WebGL app used by the hero iframe: 4 entry chunks, 26 lazy chunks, 6 faces and the `static/` payloads |
 | Universe media | `public/image/**` (13 constellation/principle textures + 5 keyhole frames), `public/audio/sound/**` (14 ambient/UI cues), `public/mirror/_nuxt/img/**` (webpack stills) |
+| Services icons | `public/constellations/**` — the six images the services page digitises into per-sector drawings (sectors 2, 3 and 5–8); sectors 1, 4 and 9 use point sets embedded in the bundle |
 | Routing | `next.config.ts` rewrites `/`, `/services`, `/projects/<slug>`, … to the mirrored pages and `/universe/index.html` to the Nuxt app |
 | Icons | `/favicon.ico`, `/icon.png`, `/apple-icon.png` at the public root |
 

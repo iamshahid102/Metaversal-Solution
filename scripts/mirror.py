@@ -180,11 +180,39 @@ def drain() -> None:
             harvest(path, data.decode("utf-8", "replace"), kind)
 
 
+CONST_RE = re.compile(r"[\"'](/constellations/[A-Za-z0-9_.-]+)[\"']")
+
+
+def mirror_constellations() -> None:
+    """Services constellations are addressed as absolute paths inside the JS
+    chunks (not markup), so they are never seen by the page harvester."""
+    refs: set[str] = set()
+    for root, _, files in os.walk(OUT):
+        for f in files:
+            if not f.endswith((".js", ".html")):
+                continue
+            text = Path(root, f).read_text(encoding="utf-8", errors="replace")
+            refs.update(CONST_RE.findall(text))
+    for ref in sorted(refs):
+        dest = Path("public", *[p for p in ref.strip("/").split("/") if p])
+        if dest.exists():
+            continue
+        try:
+            data = fetch(BASE + ref)
+        except Exception as exc:  # noqa: BLE001
+            missing.append(f"{ref} ({exc})")
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(data)
+        downloaded.append((ref, len(data)))
+
+
 def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     mirror_pages()
     mirror_universe()
     drain()
+    mirror_constellations()
     total = sum(size for _, size in downloaded)
     print(f"downloaded {len(downloaded)} files, {total / 1024 / 1024:.2f} MB")
     print(f"missing: {len(missing)}")
